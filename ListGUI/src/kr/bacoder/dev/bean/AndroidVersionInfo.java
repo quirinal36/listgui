@@ -62,9 +62,6 @@ public class AndroidVersionInfo {
 	
 	@Override
 	public String toString() {
-//		return ToStringBuilder.reflectionToString(this, 
-//				ToStringStyle.SHORT_PREFIX_STYLE);
-//		return this.versionNameEng;
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getAlphaBet()).append("::").append(this.getVersionNameEng())
 				.append("(").append(this.getVersionNameKor()).append(")");

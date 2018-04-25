@@ -4,11 +4,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -18,12 +13,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import kr.bacoder.dev.bean.AndroidVersionInfo;
 import kr.bacoder.dev.network.GetStringUtil;
@@ -110,6 +101,11 @@ public class Index implements ActionListener{
 		list.setModel(listModel);
 	}
 	
+	/**
+	 * 검색 버튼 눌렀을 때 
+	 * @param model
+	 * @param filter
+	 */
 	public void filterModel(DefaultListModel<AndroidVersionInfo>model, String filter){
 		Iterator<AndroidVersionInfo> iter = arrayList.iterator();
 		while(iter.hasNext()){
@@ -126,6 +122,9 @@ public class Index implements ActionListener{
 		}
 	}
 
+	/**
+	 * 어떠한 이벤트가 발생 했을 경우 리스너
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnNewButton){
