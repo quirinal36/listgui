@@ -1,6 +1,7 @@
 package kr.bacoder.dev.view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -104,6 +105,7 @@ public class Index implements ActionListener{
 		}
 		
 		list = new JList<AndroidVersionInfo>();
+		list.setFont(new Font(null,Font.BOLD,20));
 		scrollPane.setViewportView(list);
 		list.setModel(listModel);
 	}
