@@ -60,12 +60,16 @@ public class Index implements ActionListener{
 	
 	/**
 	 * Create the application.
+	 * @throws ParseException 
 	 */
-	public Index() {
+	public Index() throws ParseException {
 		String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
+		JsonUtil jsonUtil = new JsonUtil();
+		JSONObject json = jsonUtil.parseToJson(html);
+		arrayList = jsonUtil.transferToArrayList(json);
 		
 		try {
-			initialize(html);
+			initialize();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -75,10 +79,7 @@ public class Index implements ActionListener{
 	 * Initialize the contents of the frame.
 	 * @throws ParseException 
 	 */
-	private void initialize(String data) throws ParseException {
-		JSONObject json = new JsonUtil().parseToJson(data);
-		arrayList = new ArrayList<>();
-		
+	private void initialize() throws ParseException {
 		frame = new JFrame("Title");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,13 +98,9 @@ public class Index implements ActionListener{
 		btnNewButton.addActionListener(this);
 		panel.add(btnNewButton);
 		
-		JSONArray array = (JSONArray) json.get("list");
-		
 		DefaultListModel<AndroidVersionInfo> listModel = new DefaultListModel<>();
-		for(int i=0; i<array.size(); i++){
-			AndroidVersionInfo item = AndroidVersionInfo.toObject((JSONObject)array.get(i));
+		for(AndroidVersionInfo item : arrayList){
 			listModel.addElement(item);
-			arrayList.add(item);
 		}
 		
 		list = new JList<AndroidVersionInfo>();
