@@ -15,9 +15,11 @@ public class JsonUtil {
 	 * @throws ParseException
 	 */
 	public JSONObject parseToJson(String data) throws ParseException{
-		JSONObject result = new JSONObject();
 		JSONParser parser = new JSONParser();
-		result = (JSONObject) parser.parse(data);
-		return result;
+		
+		JSONObject dataJSON = new JSONObject();
+		
+		dataJSON = (JSONObject) parser.parse(data);
+		return dataJSON;
 	}
 }
