@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
@@ -28,38 +29,28 @@ public class Index implements ActionListener{
 	private final String getAndroidJsp = "http://dev.bacoder.kr/getAndroidVer.jsp";
 	
 	private JButton btnNewButton;
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField textField;
 	
 	private JList<AndroidVersionInfo> list;
 	
 	private ArrayList<AndroidVersionInfo> arrayList;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Index window = new Index();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private HashMap<String, AndroidVersionInfo> hashMap;
 	
 	/**
+	 * 생성자
 	 * Create the application.
 	 * @throws ParseException 
 	 */
 	public Index() throws ParseException {
+		// 파싱 시작
 		String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
 		JsonUtil jsonUtil = new JsonUtil();
 		JSONObject json = jsonUtil.parseToJson(html);
-		arrayList = jsonUtil.transferToArrayList(json);
 		
+		arrayList = jsonUtil.transferToArrayList(json);
+		hashMap = jsonUtil.transferToHashMap(json);
+		// 파싱 완료
 		try {
 			initialize();
 		} catch (ParseException e) {
@@ -88,12 +79,14 @@ public class Index implements ActionListener{
 		
 		btnNewButton = new JButton("검색");
 		btnNewButton.addActionListener(this);
-		panel.add(btnNewButton);
+		panel.add(btnNewButton);		
+		
+		arrayList.add(new AndroidVersionInfo("G", "Gingerbread", "오븐빵", 2.3, 2010));
 		
 		DefaultListModel<AndroidVersionInfo> listModel = new DefaultListModel<>();
 		for(AndroidVersionInfo item : arrayList){
 			listModel.addElement(item);
-		}
+		}	
 		
 		list = new JList<AndroidVersionInfo>();
 		list.setFont(new Font(null,Font.BOLD,20));
