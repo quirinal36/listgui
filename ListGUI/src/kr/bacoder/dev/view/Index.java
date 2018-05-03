@@ -26,7 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 
 public class Index implements ActionListener{
-	private final String getAndroidJsp = "http://dev.bacoder.kr/getAndroidVer.jsp";
+	private final String getAndroidJsp = "http://dev.bacoder.kr/temp/getAndroidVer.jsp";
 	
 	private JButton btnNewButton;
 	public JFrame frame;
@@ -45,11 +45,13 @@ public class Index implements ActionListener{
 	public Index() throws ParseException {
 		// 파싱 시작
 		String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
+		System.out.println(html);
+		
 		JsonUtil jsonUtil = new JsonUtil();
 		JSONObject json = jsonUtil.parseToJson(html);
 		
 		arrayList = jsonUtil.transferToArrayList(json);
-		hashMap = jsonUtil.transferToHashMap(json);
+//		hashMap = jsonUtil.transferToHashMap(json);
 		// 파싱 완료
 		try {
 			initialize();
@@ -81,7 +83,15 @@ public class Index implements ActionListener{
 		btnNewButton.addActionListener(this);
 		panel.add(btnNewButton);		
 		
-		arrayList.add(new AndroidVersionInfo("G", "Gingerbread", "오븐빵", 2.3, 2010));
+		AndroidVersionInfo info = new AndroidVersionInfo("G", "Gingerbread", "오븐빵", 2.3, 2010);
+		// Create
+		
+		arrayList.add(info);
+		// Insert
+		
+		arrayList.remove(info); 
+		// Delete
+		
 		
 		DefaultListModel<AndroidVersionInfo> listModel = new DefaultListModel<>();
 		for(AndroidVersionInfo item : arrayList){
