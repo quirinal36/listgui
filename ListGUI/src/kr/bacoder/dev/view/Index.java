@@ -7,8 +7,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
@@ -26,17 +28,23 @@ import javax.swing.JButton;
 import javax.swing.JList;
 
 public class Index implements ActionListener{
-	private final String getAndroidJsp = "http://dev.bacoder.kr/temp/getAndroidVer.jsp";
+	private final String getAndroidJsp = "http://dev.bacoder.kr/getAndroidVer.jsp";
 	
-	private JButton btnNewButton;
+	private JButton btnSearchButton;
+	private JButton btnAddButton;
+	private JPanel addLinePanel;
+	
 	public JFrame frame;
 	private JTextField textField;
-	
+	private JButton saveButton;
 	private JList<AndroidVersionInfo> list;
 	
 	private ArrayList<AndroidVersionInfo> arrayList;
 	private HashMap<String, AndroidVersionInfo> hashMap;
 	
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+	
+	private HashMap<String, JTextField> textFields;
 	/**
 	 * 생성자
 	 * Create the application.
@@ -45,13 +53,13 @@ public class Index implements ActionListener{
 	public Index() throws ParseException {
 		// 파싱 시작
 		String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
-		System.out.println(html);
 		
 		JsonUtil jsonUtil = new JsonUtil();
 		JSONObject json = jsonUtil.parseToJson(html);
 		
 		arrayList = jsonUtil.transferToArrayList(json);
-//		hashMap = jsonUtil.transferToHashMap(json);
+		textFields = new HashMap<>();
+		
 		// 파싱 완료
 		try {
 			initialize();
@@ -66,7 +74,7 @@ public class Index implements ActionListener{
 	 */
 	private void initialize() throws ParseException {
 		frame = new JFrame("Title");
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 650, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -79,19 +87,45 @@ public class Index implements ActionListener{
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		btnNewButton = new JButton("검색");
-		btnNewButton.addActionListener(this);
-		panel.add(btnNewButton);		
+		btnSearchButton = new JButton("검색");
+		btnSearchButton.addActionListener(this);
+		panel.add(btnSearchButton);
 		
-		AndroidVersionInfo info = new AndroidVersionInfo("G", "Gingerbread", "오븐빵", 2.3, 2010);
-		// Create
+		btnAddButton = new JButton("추가");
+		btnAddButton.addActionListener(this);
+		panel.add(btnAddButton);
 		
-		arrayList.add(info);
-		// Insert
+		addLinePanel = new JPanel();
 		
-		arrayList.remove(info); 
-		// Delete
+		// 알파벳 입력하는 텍스트
+		JTextField inputAlphabetTextField = new JTextField();
+		inputAlphabetTextField.setColumns(2);
+		addLinePanel.add(new JLabel("알파벳:"));
+		addLinePanel.add(inputAlphabetTextField);
+		textFields.put(AndroidVersionInfo.alphabet, inputAlphabetTextField);
 		
+		// 영어이름 입력하는 텍스트
+		JTextField inputEnglishNameTextField = new JTextField();
+		inputEnglishNameTextField.setColumns(8);
+		addLinePanel.add(new JLabel("영어이름:"));
+		addLinePanel.add(inputEnglishNameTextField);
+		textFields.put(AndroidVersionInfo.version_name, inputEnglishNameTextField);
+		
+		// 한국어이름 입력하는 텍스트
+		JTextField inputKorNameTextField = new JTextField();
+		inputKorNameTextField.setColumns(8);
+		addLinePanel.add(new JLabel("한글이름:"));
+		addLinePanel.add(inputKorNameTextField);
+		textFields.put(AndroidVersionInfo.version_name_kor, inputKorNameTextField);
+		
+		// 저장버튼 : 방금 입력한 부분을 저장하는 버튼
+		saveButton = new JButton("저장");
+		addLinePanel.add(saveButton);
+		saveButton.addActionListener(this);
+		
+		addLinePanel.setVisible(false);
+		
+		frame.getContentPane().add(addLinePanel, BorderLayout.SOUTH);
 		
 		DefaultListModel<AndroidVersionInfo> listModel = new DefaultListModel<>();
 		for(AndroidVersionInfo item : arrayList){
@@ -130,9 +164,62 @@ public class Index implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnNewButton){
-			System.out.println("button clicked::" + textField.getText());
+		if(e.getSource() == btnSearchButton){
 			filterModel((DefaultListModel<AndroidVersionInfo>)list.getModel(), textField.getText());
+		}else if(e.getSource() == btnAddButton) {
+			addLinePanel.setVisible(true);
+			addLinePanel.invalidate();
+		}else if(e.getSource() == saveButton) {
+			Iterator<String> iter = textFields.keySet().iterator();
+			AndroidVersionInfo info = new AndroidVersionInfo();
+			while(iter.hasNext()) {
+				String key = iter.next();
+				if(key.equals(AndroidVersionInfo.alphabet)) {
+					info.setAlphaBet(textFields.get(key).getText());
+				}else if(key.equals(AndroidVersionInfo.version_name)) {
+					info.setVersionNameEng(textFields.get(key).getText());
+				}else if(key.equals(AndroidVersionInfo.version_name_kor)) {
+					info.setVersionNameKor(textFields.get(key).getText());
+				}
+				textFields.get(key).setText("");
+			}
+			addLine(info);
+		}
+	}
+	private void addLine(AndroidVersionInfo info) {
+		String uri = new StringBuilder()
+				.append("http://dev.bacoder.kr/addAndroid.jsp?")
+				.append(AndroidVersionInfo.alphabet)
+				.append("=")
+				.append(info.getAlphaBet())
+				.append("&")
+				.append(AndroidVersionInfo.version_name)
+				.append("=")
+				.append(info.getVersionNameEng())
+				.append("&")
+				.append(AndroidVersionInfo.version_name_kor)
+				.append("=")
+				.append(info.getVersionNameKor())
+				.toString();
+		String result = GetStringUtil.getStringFromUrl(uri);
+		if(Integer.parseInt(result) > 0) {
+			addLinePanel.setVisible(false);
+			addLinePanel.invalidate();
+			String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
+			
+			JsonUtil jsonUtil = new JsonUtil();
+			JSONObject json;
+			try {
+				json = jsonUtil.parseToJson(html);
+				arrayList = jsonUtil.transferToArrayList(json);
+				DefaultListModel<AndroidVersionInfo> listModel = new DefaultListModel<>();
+				for(AndroidVersionInfo item : arrayList){
+					listModel.addElement(item);
+				}
+				list.setModel(listModel);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }

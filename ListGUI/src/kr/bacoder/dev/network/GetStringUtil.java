@@ -19,7 +19,7 @@ public class GetStringUtil {
 		StringBuilder sb = new StringBuilder();
 		try {
 	        // Create a URL for the desired page
-	        URL url = new URL(uri);
+			URL url = new URL(uri);
 	        // Read all the text returned by the server
 	        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 	        

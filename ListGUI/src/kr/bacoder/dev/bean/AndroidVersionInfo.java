@@ -5,6 +5,12 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.json.simple.JSONObject;
 
 public class AndroidVersionInfo {
+	public static final String version_num = "version_num";
+	public static final String year_key = "year";
+	public static final String version_name = "version_name";
+	public static final String version_name_kor = "version_name_kor";
+	public static final String alphabet = "alphabet";
+	
 	private String alphaBet;
 	private String versionNameEng;
 	private String versionNameKor;

@@ -2,6 +2,7 @@ package kr.bacoder.dev.parse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,7 +12,7 @@ import org.json.simple.parser.ParseException;
 import kr.bacoder.dev.bean.AndroidVersionInfo;
 
 public class JsonUtil {
-
+	Logger logger = Logger.getLogger(JsonUtil.class.getSimpleName());
 	/**
 	 * String 형식의 데이터를 받아와서
 	 * JSON 으로 파싱하는 메소드
@@ -24,11 +25,23 @@ public class JsonUtil {
 		JSONParser parser = new JSONParser();
 		
 		JSONObject dataJSON = new JSONObject();
+//		System.out.println(data);
+		logger.info(data);
 		
 		dataJSON = (JSONObject) parser.parse(data);
 		return dataJSON;
 	}
 	
+	
+	public HashMap<String, AndroidVersionInfo> transferToHashMap(ArrayList<AndroidVersionInfo> input){
+		HashMap<String, AndroidVersionInfo> result = new HashMap<>();
+		
+		for(AndroidVersionInfo item : input){
+			result.put(item.getAlphaBet(), item);
+		}
+		
+		return result;
+	}
 	public HashMap<String, AndroidVersionInfo> transferToHashMap(JSONObject json){
 		HashMap<String, AndroidVersionInfo> map = new HashMap<>();
 		JSONArray array = (JSONArray) json.get("list");
