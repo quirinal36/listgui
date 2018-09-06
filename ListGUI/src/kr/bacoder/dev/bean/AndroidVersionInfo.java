@@ -15,6 +15,7 @@ public class AndroidVersionInfo {
 	private String versionNameEng;
 	private String versionNameKor;
 	private double version;
+	private int year;
 	
 	public AndroidVersionInfo(){
 		
@@ -26,6 +27,7 @@ public class AndroidVersionInfo {
 		this.versionNameEng = versionNameEng;
 		this.versionNameKor = versionNameKor;
 		this.version = version;
+		this.year = year;
 	}
 	
 	public String getAlphaBet() {
@@ -66,11 +68,23 @@ public class AndroidVersionInfo {
 		return result;
 	}
 	
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getAlphaBet()).append("::").append(this.getVersionNameEng())
-				.append("(").append(this.getVersionNameKor()).append(")");
-		return builder.toString();
+		return "alphabet: " + this.alphaBet
+				+"\n versionName : " + this.versionNameEng
+				+"\n versionNameKor : " + this.versionNameKor
+				+"\n version: " + this.version
+				+"\n year: " + this.year;
 	}
+	
+	
+	
+//	@Override
+//	public String toString() {
+//		StringBuilder builder = new StringBuilder();
+//		builder.append(this.getAlphaBet()).append("::").append(this.getVersionNameEng())
+//				.append("(").append(this.getVersionNameKor()).append(")");
+//		return builder.toString();
+//	}
 }

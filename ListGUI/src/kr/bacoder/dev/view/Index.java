@@ -28,7 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 
 public class Index implements ActionListener{
-	private final String getAndroidJsp = "http://dev.bacoder.kr/getAndroidVer.jsp";
+	private final String getAndroidJsp = "http://www.bacoder.kr/getAndroidVer.jsp";
 	
 	private JButton btnSearchButton;
 	private JButton btnAddButton;
@@ -188,7 +188,7 @@ public class Index implements ActionListener{
 	}
 	private void addLine(AndroidVersionInfo info) {
 		String uri = new StringBuilder()
-				.append("http://dev.bacoder.kr/addAndroid.jsp?")
+				.append("http://www.bacoder.kr/addAndroid.jsp?")
 				.append(AndroidVersionInfo.alphabet)
 				.append("=")
 				.append(info.getAlphaBet())
