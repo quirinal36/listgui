@@ -74,7 +74,7 @@ public class Index implements ActionListener{
 	 */
 	private void initialize() throws ParseException {
 		frame = new JFrame("Title");
-		frame.setBounds(100, 100, 650, 500);
+		frame.setBounds(100, 100, 1000, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -158,14 +158,31 @@ public class Index implements ActionListener{
 			}
 		}
 	}
-
+	public void filterModel2(DefaultListModel<AndroidVersionInfo>model, String filter){
+		ArrayList<AndroidVersionInfo> newArray = new ArrayList<>();// 비어있는 배열
+		
+		for(AndroidVersionInfo item : arrayList) {		// 화면에 표시된 배열을 순회
+			if(item.getVersionNameEng().toLowerCase().contains(filter.toLowerCase())) {
+				newArray.add(item);
+			}
+		}
+		
+		model.clear();		// model 을 전부 비운다.
+		
+		for(AndroidVersionInfo elem : newArray) {
+			model.addElement(elem); 
+		}
+	}
 	/**
 	 * 어떠한 이벤트가 발생 했을 경우 리스너
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnSearchButton){
-			filterModel((DefaultListModel<AndroidVersionInfo>)list.getModel(), textField.getText());
+			filterModel2(
+					(DefaultListModel<AndroidVersionInfo>)list.getModel(), 
+					textField.getText()
+					);
 		}else if(e.getSource() == btnAddButton) {
 			addLinePanel.setVisible(true);
 			addLinePanel.invalidate();

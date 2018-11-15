@@ -25,7 +25,6 @@ public class JsonUtil {
 		JSONParser parser = new JSONParser();
 		
 		JSONObject dataJSON = new JSONObject();
-//		System.out.println(data);
 		logger.info(data);
 		
 		dataJSON = (JSONObject) parser.parse(data);
