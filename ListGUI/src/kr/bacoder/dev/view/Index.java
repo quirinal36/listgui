@@ -4,6 +4,10 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,6 +24,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import kr.bacoder.dev.bean.AndroidVersionInfo;
+import kr.bacoder.dev.db.DBconn;
 import kr.bacoder.dev.network.GetStringUtil;
 import kr.bacoder.dev.parse.JsonUtil;
 
@@ -51,6 +56,27 @@ public class Index implements ActionListener{
 	 * @throws ParseException 
 	 */
 	public Index() throws ParseException {
+		DBconn db = new DBconn();
+		try (Connection conn = db.getConnection()){
+			String sql = "SELECT id, username, login, pwd FROM GameUser";
+			
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				String username = rs.getString("username");
+				String login = rs.getString("login");
+				String pwd = rs.getString("pwd");
+				int id = rs.getInt("id");
+				
+				System.out.println("username : " + username);
+				System.out.println("login : " + login);
+			}
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		// 파싱 시작
 		String html = GetStringUtil.getStringFromUrl(getAndroidJsp);
 		
